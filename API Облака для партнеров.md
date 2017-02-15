@@ -66,7 +66,7 @@ curl GET
     H "Content-Type: application/json;charset=utf-8" -
     H "X-Authorization: {токен}"
 ```
-Ответ:
+Статусы ответов:
 ```
 200 - Успех 
 400 - Ошибка "Bad Request"
@@ -94,7 +94,7 @@ curl - X POST - H "Content-Type: application/json" -
     }]
 '
 ```
-Ответ:
+Статусы ответов:
 ```
 200 - Успех 
 400 - Ошибка "Bad Request"
@@ -110,7 +110,7 @@ curl - XGET\ -
     H "Content-Type: application/json;charset=utf-8" -
     H "X-Authorization: {токен}"
 ```
-Ответ:
+Статусы ответов:
 ```
 200 - Успех 
 400 - Ошибка "Bad Request"
