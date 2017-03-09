@@ -56,7 +56,8 @@ body {}
 https://srv41.market.local/core/handler/api/v1/inventories/products/extras
 ```
 curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057" -H   
-"X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"      "https://srv41.market.local/core/handler/api/v1/inventories/products/extras"  
+"X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  
+"https://srv41.market.local/core/handler/api/v1/inventories/products/extras"  
 
 resp:
 [
@@ -84,7 +85,8 @@ resp:
 Запрос: https://srv41.market.local/core/handler/api/v1/inventories/products/schemes
 ```
 curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057"   
--H "X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"     "https://srv41.market.local/core/handler/api/v1/inventories/products/schemes"  
+-H "X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  
+"https://srv41.market.local/core/handler/api/v1/inventories/products/schemes"  
 
 resp:
 [
