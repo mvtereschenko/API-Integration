@@ -13,9 +13,9 @@ https://srv41.market.local/core/handler/api/v1/inventories/products/extras/event
 ```
 req:
 curl -X GET 
--H "X-Device-ID: 352398080126057"                       //заголовок проставляется не на кассе
--H "X-User-ID: 02-900000000000001"                      //заголовок проставляется не на кассе
--H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  //заголовок проставляется не на кассе
+-H "X-Device-ID: 352398080126057"                       //заголовок просавляетс не на кассе
+-H "X-User-ID: 02-900000000000001"                      //заголовок просавляетс не на кассе
+-H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  //заголовок просавляетс не на кассе
 
 "https://srv41.market.local/core/handler/api/v1/inventories/products/extras/events/update" -d
 
