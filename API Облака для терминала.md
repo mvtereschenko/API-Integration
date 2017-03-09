@@ -55,7 +55,9 @@ body {}
 Запрос:
 https://srv41.market.local/core/handler/api/v1/inventories/products/extras
 ```
-curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057" -H "X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  "https://srv41.market.local/core/handler/api/v1/inventories/products/extras"
+curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057" -H   
+"X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"    "https://srv41.market.local/core/handler/api/v1/inventories/products/extras"  
+
 resp:
 [
   {
@@ -75,20 +77,14 @@ resp:
   }
 ]
 ```
-Статусы ответов:
-```
-body {}
-200 Ok
-400 неверный пейлоад
-500 сервак не доступен
-```
 
 <a name="003"></a>
 ### 3. Получение схемы экстра продуктов для магазина на терминал из Облака
 
 Запрос: https://srv41.market.local/core/handler/api/v1/inventories/products/schemes
 ```
-curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057" -H "X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159" "https://srv41.market.local/core/handler/api/v1/inventories/products/schemes"
+curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057"   
+-H "X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"   "https://srv41.market.local/core/handler/api/v1/inventories/products/schemes"  
 
 resp:
 [
@@ -125,10 +121,4 @@ resp:
     ]
   }
 ]
-```
-Статусы ответов:
-```
-200 - Успех 
-400 - Ошибка "Bad Request"
-401 - Ошибка "Unauthorized"
 ```
