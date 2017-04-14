@@ -166,7 +166,7 @@
     
     Запрос:
     ```
-    GET /api/v1/inventories/stores/{store-uuid}/products/extras HTTP/1.1
+    GET /api/v1/inventories/stores/{store-uuid}/products/extras
     Host: https://api.evotor.ru
     Content-Type: application/json;charset=utf-8"
     X-Authorization: {токен}
