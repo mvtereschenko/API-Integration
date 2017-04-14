@@ -30,19 +30,19 @@
     В 1 приложении должна быть только 1 схема, которая покрывает все экстра данного приложения. В перспективе можно будет менять схему для нескольких приложений (тогда пригодиться массив по appId, но пока это ограничено на уровне прав доступа по токену в запросе, который имеет право изменять только соответствующую схему приложения).  
     
     Запрос:
-    https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/products/schemes
     ```
-    curl POST
-        -
-        H "Content-Type: application/json;charset=utf-8" -
-        H "X-Auth-Token: {токен}" -
-        d '[  {
+    POST api/v1/inventories/stores/{store-uuid}/products/schemes  
+    Host: https://api.evotor.ru  
+    Content-Type: application/json;charset=utf-8
+    X-Authorization: {токен}
+  
+        [  {
             "uuid": "{uuid-схемы-продуктов-в-магазине}",
             "appId": "{uuid-приложения-в-маркетплейсе}",
             "items": [{
                     "title": "Произвольный заголовок поля ввода текста",
                     "editable": false,
-                    "regexp": "\w+", // валидный регексп
+                    "regexp": "\\w+", // валидный регексп
                     "uuid": "{uuid-поля-1}",
                     "type": "TEXT_FIELD",
                     "data": {} // валидный JSON с произвольными данными доступными из JS на терминале
@@ -66,7 +66,6 @@
                 }
             ]
         }]
-    '
     ```
     Статусы ответов:
     ```
@@ -79,16 +78,15 @@
     Где items.title - это заголовок поля и заголовок окна при выборе одновременно, а items.items.title - это заголовок одного значения из списка возможных предопределенных значений.  
     Добавлять значения "экстра полей" для всех productUuid можно как одним POST запросом, так и по частями, например по 100 позиций.
     
-    <a name="02"></a>
+    <a name="2"></a>
     ### 2. Получение схемы продуктов для магазина
     
     Запрос:
-    https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/products/schemes
     ```
-    curl GET
-        -
-        H "Content-Type: application/json;charset=utf-8" -
-        H "X-Authorization: {токен}"
+    POST api/v1/inventories/stores/{store-uuid}/products/schemes  
+    Host: https://api.evotor.ru  
+    Content-Type: application/json;charset=utf-8
+    X-Authorization: {токен}
     ```
     Статусы ответов:
     ```
@@ -97,12 +95,32 @@
     401 - Ошибка "Unauthorized"
     ```
 
-    <a name="03"></a>
+    <a name="3"></a>
     ### 3. Удаление схемы продуктов для магазина
     
     Запрос: надо добавить
+
+    Пример 1: Удалить схемы по списку уидов схем
+
     ```
-    надо добавить
+    POST /api/v1/inventories/stores/{storeUuid}/products/schemes/delete  
+    Host: https://api.evotor.ru  
+    Content-Type: application/json;charset=utf-8  
+    X-Authorization: {токен}
+    
+    [   
+      {scheme-uuid-1},
+      {scheme-uuid-2}
+    ]
+    ```
+    Пример 2: Удалить все схемы для товаров в магазине
+    ```
+    POST /api/v1/inventories/stores/{storeUuid}/products/schemes/delete
+    Host: https://api.evotor.ru
+    Content-Type: application/json;charset=utf-8
+    X-Authorization: {токен}
+    
+    []
     ```
     Статусы ответов:
     ```
@@ -111,14 +129,17 @@
     401 - Ошибка "Unauthorized"
     ```
     
-    <a name="04"></a>
+    <a name="4"></a>
     ### 4. Добавление конкретных значений экстра в товары для магазина
     
-    Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/products/extras
+    Запрос: 
     ```
-    curl - X POST - H "Content-Type: application/json" -
-        H "Content-Type: application/json;charset=utf-8" -
-        H "X-Auth-Token: test-token-1" - d ' [  {
+    POST /api/v1/inventories/stores/{store-uuid}/products/extras 
+    Host: https://api.evotor.ru  
+    Content-Type: application/json;charset=utf-8
+    X-Auth-Token: {токен}
+    
+        [{
             "uuid": "{uuid-экстра-поля-1}",
             "appId": "{uuid-приложения-в-маркетплейсе}",
             "key": {
@@ -131,7 +152,7 @@
             },
             "data": {}, // валидный JSON с произвольными данными доступными из JS на терминале
         }]
-    '
+    
     ```
     Статусы ответов:
     ```
@@ -140,14 +161,46 @@
     401 - Ошибка "Unauthorized"
     ```
     
-    <a name="05"></a>
+    <a name="5"></a>
     ### 5. Получение конкретных значений экстра товаров в магазине
     
-    Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/test-store/products/extras
+    Запрос:
     ```
-    curl - XGET\ -
-        H "Content-Type: application/json;charset=utf-8" -
-        H "X-Authorization: {токен}"
+    GET /api/v1/inventories/stores/{store-uuid}/products/extras HTTP/1.1
+    Host: https://api.evotor.ru
+    Content-Type: application/json;charset=utf-8"
+    X-Authorization: {токен}
+    ```
+    Ответ:
+    ```
+    [ {
+      "uuid" : "6eea4588-b3ac-4d78-9ede-c7b4fe26de55",
+      "appId" : "9cb441a5-52b2-46fa-b40d-f71bff3eb63e",
+      "name" : null,
+      "key" : {
+        "uuid" : "6eea4588-b3ac-4d78-9ede-c7b4fe26de55",
+        "store" : null
+      },
+      "scheme" : {
+        "value" : "a52fde7b-d2d6-443e-966f-1bcfbaff03f1",
+        "fieldId" : "90144b1b-1560-409b-a90e-0cc89afd0830"
+      },
+      "data" : {
+        "depts" : [ {
+          "title" : "Женский отдел",
+          "value" : "444b4584-633b-4e5e-af25-59dc583dd4f5"
+        }, {
+          "title" : "Туристический",
+          "value" : "6d7b1b6e-d029-4a77-8cf1-3cf5239525cb"
+        }, {
+          "title" : "Детский отдел",
+          "value" : "a52fde7b-d2d6-443e-966f-1bcfbaff03f1"
+        }, {
+          "title" : "Бытовая химия",
+          "value" : "b71b0ae7-fa59-4cba-bd47-35ec351a543e"
+        } ]
+      }
+    }]
     ```
     Статусы ответов:
     ```
@@ -156,12 +209,29 @@
     401 - Ошибка "Unauthorized"
     ```
 
-    <a name="06"></a>
+    <a name="6"></a>
     ### 6. Удаление конкретных значений экстра товаров в магазине
     
-    Запрос: надо добавить
+    Пример 1: Удалить экстры по списку уидов экстр
     ```
-    надо добавить
+    POST /api/v1/inventories/stores/{storeUuid}/products/extras/delete
+    Host: https://api.evotor.ru
+    Content-Type: application/json;charset=utf-8
+    X-Authorization: {токен}
+    
+    [   
+      {extra-uuid-1},
+      {extra-uuid-2}
+    ]
+    ```
+    Пример 2: Удалить вес экстры для товаров в магазине
+    ```
+    POST /api/v1/inventories/stores/{storeUuid}/products/extras/delete
+    Host: https://api.evotor.ru
+    Content-Type: application/json;charset=utf-8
+    X-Authorization: {токен}
+    
+    []
     ```
     Статусы ответов:
     ```
@@ -170,22 +240,18 @@
     401 - Ошибка "Unauthorized"
     ```
         
-    <a name="07"></a>
+    <a name="7"></a>
     ### 7. Получение документов чека и их экстра данных
     
     Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/documents?deviceUuid  
     ```
-    GET
-    headers = {
-        Content - Type = [application / json;charset = UTF - 8];
-        accept - encoding = [gzip];
-        x - authorization = [{
-            user - application1 - token
-        }]
-    };
-    req payload = ;
-    resp status = 200;
-    resp payload = [{
+    GET /api/v1/inventories/stores/{store-uuid}/documents?deviceUuid  
+    Host: https://api.evotor.ru  
+    Content-Type: application/json;charset=utf-8
+    accept-encoding = [gzip]
+    X-Authorization: {токен}
+    
+    [{
         "uuid": "5285ab1b-2ecb-4614-87f7-99b1486a04fe",
         "type": "OPEN_SESSION",
         "deviceId": "352398080047279",
@@ -205,3 +271,4 @@
     400 - Ошибка "Bad Request"
     401 - Ошибка "Unauthorized"
     ```
+
