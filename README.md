@@ -252,10 +252,7 @@
     X-Authorization: {токен}
     
     [{
-        "uuid": "5285ab1b-2ecb-4614-87f7-99b1486a04fe",
-        "type": "OPEN_SESSION",
-        "deviceId": "352398080047279",
-        "deviceUuid": "8ffbe447-79d0-4fd9-823a-6da96d7f0be9",
+        "uuid": "5285ab1b-2ecb-4614-87f7-99b1486a04fe"
         ...стандарнтые поля модели документа Эвотор...
         "extras": {
             "{application1-uuid}": {
