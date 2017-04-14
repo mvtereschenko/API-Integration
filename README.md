@@ -83,7 +83,7 @@
     
     Запрос:
     ```
-    POST api/v1/inventories/stores/{store-uuid}/products/schemes  
+    GET api/v1/inventories/stores/{store-uuid}/products/schemes  
     Host: https://api.evotor.ru  
     Content-Type: application/json;charset=utf-8
     X-Authorization: {токен}
