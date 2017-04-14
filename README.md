@@ -250,7 +250,9 @@
     Content-Type: application/json;charset=utf-8
     accept-encoding = [gzip]
     X-Authorization: {токен}
-    
+    ```
+    Ответ:
+    ```
     [{
         "uuid": "5285ab1b-2ecb-4614-87f7-99b1486a04fe"
         ...стандарнтые поля модели документа Эвотор...
