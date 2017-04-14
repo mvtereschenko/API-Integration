@@ -243,7 +243,7 @@
     <a name="7"></a>
     ### 7. Получение документов чека и их экстра данных
     
-    Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/documents?deviceUuid  
+    Запрос:
     ```
     GET /api/v1/inventories/stores/{store-uuid}/documents?deviceUuid  
     Host: https://api.evotor.ru  
