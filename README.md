@@ -137,7 +137,7 @@
     POST /api/v1/inventories/stores/{store-uuid}/products/extras 
     Host: https://api.evotor.ru  
     Content-Type: application/json;charset=utf-8
-    X-Auth-Token: {токен}
+    X-Authorization: {токен}
     
         [{
             "uuid": "{uuid-экстра-поля-1}",
