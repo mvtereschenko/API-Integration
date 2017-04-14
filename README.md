@@ -1,126 +1,207 @@
 # API Облака для терминала
 
-## Список API
-* [1. Изменение значений экстра продуктов для магазина из терминала в Облако](#001)
-* [2. Получение значений экстра продуктов для магазина на терминал из Облака](#002)
-* [3. Получение схемы экстра продуктов для магазина на терминал из Облака](#003)
+* [Список API Облака для партнеров:](#0)
 
-<a name="001"></a>
-### 1. Изменение значений экстра продуктов для магазина из терминала в Облако
+    * [1. Изменение схемы продуктов для магазина](#1)
+    * [2. Получение схемы продуктов для магазина](#2)
+    * [3. Удаление схемы продуктов для магазина](#3)
+    * [4. Добавление конкретных значений экстра в товары для магазина](#4)
+    * [5. Получение конкретных значений экстра товаров в магазине](#5)
+    * [6. Удаление конкретных значений экстра товаров в магазине](#6)
+    * [7. Получение документов чека и их экстра данных](#7)
 
-Запрос:
-https://srv41.market.local/core/handler/api/v1/inventories/products/extras/events/update
-```
-req:
-curl -X GET 
--H "X-Device-ID: 352398080126057"                       //заголовок просавляетс не на кассе
--H "X-User-ID: 02-900000000000001"                      //заголовок просавляетс не на кассе
--H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  //заголовок просавляетс не на кассе
+    <a name="0"></a>
+    ## API Облака для партнеров
+      
+    В вашем кабинете на dev.evotor.ru нужно зарегистрировать приложение "Название приложения".  
+    Для разработки нужен uuid приложения, uuid приложения можно посмотреть в адресной строке.  
+    Также нужно прописать сервер приложения https:название приложения.название компании.ru, пока в кабинете разработчика не появится эта возможность.  
+    
+    Если присутствует необходимость серверной интеграции, тогда нужно предварительно авторизовывать пользовательские запросы.  
+    Для этого нужен пользовательский токен. Чтобы его получить - нужно поддержать нотацию API:  
+    https://api.evotor.ru/docs/?url=/docs/v1/evotor-to-partner.json#!/Управление_учетными_записями
+    
+    <a name="1"></a>
+    ### 1. Изменение схемы продуктов для магазина
+    
+    У товара в магазине для одного приложения может быть одно экстра-поле внутри него любой валидный json (например поле с массивом объектов которые могут вам понадобиться на терминале).  
+    У того же товара в том же магазине, но для другого приложения эстра поле будет другим. Когда к апи обращаются с токеном приложения то GET и POST будет влиять на экстраполя того приложения с токеном которого обращаются.  
+    
+    В 1 приложении должна быть только 1 схема, которая покрывает все экстра данного приложения. В перспективе можно будет менять схему для нескольких приложений (тогда пригодиться массив по appId, но пока это ограничено на уровне прав доступа по токену в запросе, который имеет право изменять только соответствующую схему приложения).  
+    
+    Запрос:
+    https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/products/schemes
+    ```
+    curl POST
+        -
+        H "Content-Type: application/json;charset=utf-8" -
+        H "X-Auth-Token: {токен}" -
+        d '[  {
+            "uuid": "{uuid-схемы-продуктов-в-магазине}",
+            "appId": "{uuid-приложения-в-маркетплейсе}",
+            "items": [{
+                    "title": "Произвольный заголовок поля ввода текста",
+                    "editable": false,
+                    "regexp": "\w+", // валидный регексп
+                    "uuid": "{uuid-поля-1}",
+                    "type": "TEXT_FIELD",
+                    "data": {} // валидный JSON с произвольными данными доступными из JS на терминале
+                },
+                {
+                    "editable": true,
+                    "title": "Произвольный заголовок поля выбора из списка",
+                    "uuid": "{uuid-поля-2}",
+                    "items": [{
+                            "data": {}, // валидный JSON с произвольными данными доступными из JS на терминале
+                            "title": "Заголовок первого варианта выбора",
+                            "value": "10"
+                        },
+                        {
+                            "data": {}, // валидный JSON с произвольными данными доступными из JS на терминале
+                            "title": "Special title",
+                            "value": "20"
+                        }
+                    ],
+                    "type": "DICTIONARY_FIELD"
+                }
+            ]
+        }]
+    '
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
+    
+    В пример запроса описаны 2 поля, где 1 поле - текстовое поле, где title = "Произвольный заголовок поля ввода текста" и 2 поле - выбор из списка, где title = "Произвольный заголовок поля выбора из списка".  
+    Где items.title - это заголовок поля и заголовок окна при выборе одновременно, а items.items.title - это заголовок одного значения из списка возможных предопределенных значений.  
+    Добавлять значения "экстра полей" для всех productUuid можно как одним POST запросом, так и по частями, например по 100 позиций.
+    
+    <a name="02"></a>
+    ### 2. Получение схемы продуктов для магазина
+    
+    Запрос:
+    https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/products/schemes
+    ```
+    curl GET
+        -
+        H "Content-Type: application/json;charset=utf-8" -
+        H "X-Authorization: {токен}"
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
 
-"https://srv41.market.local/core/handler/api/v1/inventories/products/extras/events/update" -d
+    <a name="03"></a>
+    ### 3. Удаление схемы продуктов для магазина
+    
+    Запрос: надо добавить
+    ```
+    надо добавить
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
+    
+    <a name="04"></a>
+    ### 4. Добавление конкретных значений экстра в товары для магазина
+    
+    Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/products/extras
+    ```
+    curl - X POST - H "Content-Type: application/json" -
+        H "Content-Type: application/json;charset=utf-8" -
+        H "X-Auth-Token: test-token-1" - d ' [  {
+            "uuid": "{uuid-экстра-поля-1}",
+            "appId": "{uuid-приложения-в-маркетплейсе}",
+            "key": {
+                "uuid": "{uuid-продукта-связанного-с-экстра-полем}",
+            },
+            "scheme": { // Секция данных привязки значения экстра поля к контролу отображаемому на терминале
+                        // (не требуется если экстра данные не нужно отобржатаь в меню терминал)
+                "value": "20",
+                "fieldId": "{{uuid-поля-из-схемы-отображения-продукта}"
+            },
+            "data": {}, // валидный JSON с произвольными данными доступными из JS на терминале
+        }]
+    '
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
+    
+    <a name="05"></a>
+    ### 5. Получение конкретных значений экстра товаров в магазине
+    
+    Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/test-store/products/extras
+    ```
+    curl - XGET\ -
+        H "Content-Type: application/json;charset=utf-8" -
+        H "X-Authorization: {токен}"
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
 
- [ 
-  {
-    timestamp: ...дата-как-обычно... ,
-    extra: {                                                             
-      "uuid": "832dd968-1249-45c5-8432-b2e1f41c27a0",
-      "app": "test-app",                                          
-      "key": {                                                    
-        "uuid": "PRODUCT-UUID-200",                               
-        "store": "20161209-3002-4054-80FD-F41228042BAF"           
-      },                                                          
-      "scheme": {                                                 
-        "value": "20",                                            
-        "fieldId": "SOME-DICTIONARY-FIELD-UUID"                   
-      },                                                          
-      "data": {                                                   
-        "FullName": "Новое улучшенное значение"                
-      },                                                          
-    }                                                             
-
-  }
-]
-```
-Статусы ответов:
-```
-body {}
-200 Ok
-400 неверный пейлоад
-500 сервак не доступен
-```
-
-<a name="002"></a>
-### 2. Получение значений экстра продуктов для магазина на терминал из Облака
-
-Запрос:
-https://srv41.market.local/core/handler/api/v1/inventories/products/extras
-```
-curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057" -H   
-"X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  
-"https://srv41.market.local/core/handler/api/v1/inventories/products/extras"  
-
-resp:
-[
-  {
-    "uuid": "832dd968-1249-45c5-8432-b2e1f41c27a0",
-    "app": "test-app",
-    "key": {
-      "uuid": "b57dfde8-eb29-4ab5-aac9-e608a2e07ee5",
-      "store": "20160913-8486-4027-800D-47417330D159"
-    },
-    "scheme": {
-      "value": "20",
-      "fieldId": "SOME-DICTIONARY-FIELD-UUID"
-    },
-    "data": {
-      "FullName": "Organization Twenty FullName"
-    }
-  }
-]
-```
-
-<a name="003"></a>
-### 3. Получение схемы экстра продуктов для магазина на терминал из Облака
-
-Запрос: https://srv41.market.local/core/handler/api/v1/inventories/products/schemes
-```
-curl -X GET -H "X-EVO-MARKET-ENTRYPOINT: INTERNAL" -H "X-Device-ID: 352398080126057"   
--H "X-User-ID: 02-900000000000001" -H "X-Shop-UUID: 20160913-8486-4027-800D-47417330D159"  
-"https://srv41.market.local/core/handler/api/v1/inventories/products/schemes"  
-
-resp:
-[
-  {
-    "uuid": "product-scheme-uuid",
-    "appId": "test-product-extra-app1",
-    "items": [
-      {
-        "type": "TEXT_FIELD",
-        "title": "text field title",
-        "editable": false,
-        "regexp": null,
-        "uuid": "SOME-TEXT-FIELD-UUID",
-        "data": null
-      },
-      {
-        "type": "DICTIONARY_FIELD",
-        "editable": true,
-        "title": "Dictionary field title",
-        "uuid": "SOME-DICTIONARY-FIELD-UUID",
-        "items": [
-          {
-            "data": {},
-            "title": "Something title",
-            "value": "20"
-          },
-          {
-            "data": {},
-            "title": "Special title",
-            "value": "20"
-          }
-        ]
-      }
-    ]
-  }
-]
-```
+    <a name="06"></a>
+    ### 6. Удаление конкретных значений экстра товаров в магазине
+    
+    Запрос: надо добавить
+    ```
+    надо добавить
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
+        
+    <a name="07"></a>
+    ### 7. Получение документов чека и их экстра данных
+    
+    Запрос: https://test-api.evotor.ru/api/v1/inventories/stores/{store-uuid}/documents?deviceUuid  
+    ```
+    GET
+    headers = {
+        Content - Type = [application / json;charset = UTF - 8];
+        accept - encoding = [gzip];
+        x - authorization = [{
+            user - application1 - token
+        }]
+    };
+    req payload = ;
+    resp status = 200;
+    resp payload = [{
+        "uuid": "5285ab1b-2ecb-4614-87f7-99b1486a04fe",
+        "type": "OPEN_SESSION",
+        "deviceId": "352398080047279",
+        "deviceUuid": "8ffbe447-79d0-4fd9-823a-6da96d7f0be9",
+        ...стандарнтые поля модели документа Эвотор...
+        "extras": {
+            "{application1-uuid}": {
+                валидный_джейсон_со_значениями_эстра,
+                application1 - uuid соответсвующий user - application1 - token - у
+            }
+        }
+    }]
+    ```
+    Статусы ответов:
+    ```
+    200 - Успех
+    400 - Ошибка "Bad Request"
+    401 - Ошибка "Unauthorized"
+    ```
